@@ -25,9 +25,16 @@ const MostrarVoltas: React.FC<PropsVoltas> = ({ voltas }) => {
 }
 
 const TempoVolta: React.FC<PropsTempo> = ({ tempo }) => {
+  const minutos = Math.round ( tempo / 60 )
+  const segundos = tempo % 60
+  const minutosStr = minutos < 10 ? '0' + minutos : minutos
+  const segundosStr = segundos < 10 ? '0' + segundos : segundos
   return (
     <>
-      <p>{tempo} tempo médio por volta</p>
+      <p>
+        {`${minutosStr}:${segundosStr}`} <br/>
+        tempo médio por volta
+      </p>
     </>
   )
 }
@@ -36,42 +43,53 @@ const TempoVolta: React.FC<PropsTempo> = ({ tempo }) => {
 const Button: React.FC<PropsButton> = ({ text, onClick }) => <button onClick = { onClick }> { text } </button>
 
 function App() {
-  const [numVoltas, setNumVoltas] = useState(0)
-  const [tempo, setTempo] = useState(0)
-  const [running, setRunning] = useState(false)
+  const [numVoltas, setNumVoltas] = useState( 0 )
+  const [tempo, setTempo] = useState( 0 )
+  const [running, setRunning] = useState( false )
 
   useEffect(() => {
     let timer: number | null = null
     if(running) {
       setInterval(() => {
-        setTempo(old => old + 1)
+        setTempo( old => old + 1 )
       }, 1000)
     }
     return () => {
-      if (timer) {
-        clearInterval(timer)
+      if ( timer ) {
+        clearInterval ( timer )
       }
     } 
   }, [running])
 
   const toogleRunning = () => {
-    setRunning (!running)
+    setRunning ( !running )
+    console.log( { running } )
   }
 
   const increment = () => {
-    setNumVoltas(numVoltas + 1)
+    setNumVoltas( numVoltas + 1 )
   }
+
   const decrement = () => {
-    setNumVoltas(numVoltas - 1)
+    setNumVoltas( numVoltas - 1 )
   }
+
+  const reset = () => {
+    setNumVoltas(0)
+    setTempo(0)
+  }
+
   return (
     <div className="App">
-      <MostrarVoltas voltas = {numVoltas}/>
-      <Button text='-' onClick = {decrement}/>
-      <Button text='+' onClick = {increment}/>
-      <TempoVolta tempo = {tempo}/>
-      <Button text='inicar' onClick = {toogleRunning}/>
-      <Button text='reiniciar' onClick = {increment}/>
+      <MostrarVoltas voltas = { numVoltas }/>
+      <Button text='-' onClick = { decrement }/>
+      <Button text='+' onClick = { increment }/>
+      {
+        numVoltas > 0 &&
+        <TempoVolta tempo = { tempo / numVoltas }/>
+      }
+      <Button text='inicar' onClick = { toogleRunning }/>
+      <Button text='reiniciar' onClick = { reset }/>
     </div>
   )
 }
