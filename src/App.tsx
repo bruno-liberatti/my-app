@@ -1,7 +1,7 @@
 /* eslint-disable no-const-assign */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState, useEffect } from 'react';
-import './App.css';
+import React, { useState, useEffect } from 'react'
+import './App.css'
 import ShowTurns from './components/ShowTurns'
 import TimingTurns from './components/TimingTurns'
 import Button from './components/Button'
@@ -58,4 +58,4 @@ function App() {
   )
 }
 
-export default App;
+export default App
