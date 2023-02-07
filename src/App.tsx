@@ -2,56 +2,20 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import './App.css';
-
-interface PropsVoltas {
-  voltas: number
-}
-
-interface PropsTempo {
-  tempo: number
-}
-
-interface PropsButton {
-  text: string
-  onClick: () => void
-}
-
-const MostrarVoltas: React.FC<PropsVoltas> = ({ voltas }) => {
-  return (
-    <>
-      <p>{voltas}<br/>voltas</p>
-    </>
-  )
-}
-
-const TempoVolta: React.FC<PropsTempo> = ({ tempo }) => {
-  const minutos = Math.round ( tempo / 60 )
-  const segundos = tempo % 60
-  const minutosStr = minutos < 10 ? '0' + minutos : minutos
-  const segundosStr = segundos < 10 ? '0' + segundos : segundos
-  return (
-    <>
-      <p>
-        {`${minutosStr}:${segundosStr}`} <br/>
-        tempo médio por volta
-      </p>
-    </>
-  )
-}
-
-
-const Button: React.FC<PropsButton> = ({ text, onClick }) => <button onClick = { onClick }> { text } </button>
+import ShowTurns from './components/ShowTurns'
+import TimingTurns from './components/TimingTurns'
+import Button from './components/Button'
 
 function App() {
-  const [numVoltas, setNumVoltas] = useState( 0 )
-  const [tempo, setTempo] = useState( 0 )
+  const [numTurns, setNumTurns] = useState( 0 )
+  const [timing, setTiming] = useState( 0 )
   const [running, setRunning] = useState( false )
 
   useEffect(() => {
     let timer: number | null = null
-    if(running) {
+    if ( running ) {
       setInterval(() => {
-        setTempo( old => old + 1 )
+        setTiming( old => old + 1 )
       }, 1000)
     }
     return () => {
@@ -59,7 +23,7 @@ function App() {
         clearInterval ( timer )
       }
     } 
-  }, [running])
+  }, [ running ])
 
   const toogleRunning = () => {
     setRunning ( !running )
@@ -67,26 +31,26 @@ function App() {
   }
 
   const increment = () => {
-    setNumVoltas( numVoltas + 1 )
+    setNumTurns( numTurns + 1 )
   }
 
   const decrement = () => {
-    setNumVoltas( numVoltas - 1 )
+    setNumTurns( numTurns - 1 )
   }
 
   const reset = () => {
-    setNumVoltas(0)
-    setTempo(0)
+    setNumTurns(0)
+    setTiming(0)
   }
 
   return (
     <div className="App">
-      <MostrarVoltas voltas = { numVoltas }/>
+      <ShowTurns turns = { numTurns }/>
       <Button text='-' onClick = { decrement }/>
       <Button text='+' onClick = { increment }/>
       {
-        numVoltas > 0 &&
-        <TempoVolta tempo = { tempo / numVoltas }/>
+        numTurns > 0 &&
+        <TimingTurns timing = { timing / numTurns }/>
       }
       <Button text='inicar' onClick = { toogleRunning }/>
       <Button text='reiniciar' onClick = { reset }/>
